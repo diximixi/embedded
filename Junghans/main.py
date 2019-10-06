@@ -2,31 +2,41 @@
 
 import board
 from digitalio import DigitalInOut, Direction, Pull
-from analogio import AnalogOut, AnalogIn
-import touchio
-from adafruit_hid.keyboard import Keyboard
-from adafruit_hid.keycode import Keycode
-import adafruit_dotstar as dotstar
 import time
-import neopixel
 
-def volts(v):
-    dacMax = (1<<16)-1
-    vMax = 3.3
-    return max(0, min(dacMax, int(v*dacMax/vMax)))
+class Motor:
+    def __init__(self):
+        self.__outF = DigitalInOut(board.D0)
+        self.__outB = DigitalInOut(board.D1)
+        self.__outF.direction = Direction.OUTPUT
+        self.__outF.value = False
+        self.__outB.direction = Direction.OUTPUT
+        self.__outB.value = False
 
-# Analog output on D0
-analog_out = AnalogOut(board.A0)
+    def forward(self):
+        self.stop()
+        self.__outF.value = True
 
-######################### MAIN LOOP ##############################
+    def backward(self):
+        self.stop()
+        self.__outB.value = True
 
+    def stop(self):
+        self.__outF.value = False
+        self.__outB.value = False
+        time.sleep(0.2)
+
+
+bellmotor = Motor()
+
+# Main loop
 while True:
-    # Count up from 0 to 65535, with 64 increment
-    # which ends up corresponding to the DAC's 10-bit range
-    #for i in range(0, 65535, 64):
-    #    analog_out.value = i
-    #    time.sleep(0.01)
-    analog_out.value = volts(3.3)
-    time.sleep(0.5)
-    analog_out.value = volts(0.0)
-    time.sleep(0.5)
+    t = 2
+    bellmotor.forward()
+    time.sleep(t)
+    bellmotor.stop()
+    time.sleep(2.0)
+    bellmotor.backward()
+    time.sleep(t)
+    bellmotor.stop()
+    time.sleep(2.0)
