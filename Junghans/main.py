@@ -36,12 +36,12 @@ bellmotor = Motor(0.4)
 
 # Main loop
 while True:
-    t = 2
+    t = 1
     bellmotor.forward()
     time.sleep(t)
-    #bellmotor.stop()
-    #time.sleep(2.0)
+    bellmotor.stop()
+    time.sleep(2.0)
     bellmotor.backward()
     time.sleep(t)
-    #bellmotor.stop()
-    #time.sleep(2.0)
+    bellmotor.stop()
+    time.sleep(2.0)
